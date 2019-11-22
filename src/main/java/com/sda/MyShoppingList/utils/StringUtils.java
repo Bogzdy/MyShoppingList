@@ -8,7 +8,7 @@ public class StringUtils {
 
 
     public static boolean isAValidName(String string){
-        return string.matches("[a-zA-Z0-9-: ]*");
+        return string.matches("[a-zA-Z0-9-:% ]*");
     }
 
 }

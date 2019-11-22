@@ -1,6 +1,7 @@
 package com.sda.MyShoppingList.abstractclasses;
 
 import com.sda.MyShoppingList.exception.BusinessExeption;
+import com.sda.MyShoppingList.exception.Errors;
 import com.sda.MyShoppingList.utils.StringUtils;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -20,7 +21,7 @@ public abstract class AbstractService<ID_TYPE, MODEL extends AbstractModel<ID_TY
         if (StringUtils.isAValidName(model.getName())){
             return repository.saveAndFlush(model);
         } else {
-            throw new BusinessExeption("Invalid field value: \"" + model.getName() + "\".");
+            throw new BusinessExeption(Errors.INVALID_FIELD_VALUE + "(" + model.getName() + ")");
         }
     }
 

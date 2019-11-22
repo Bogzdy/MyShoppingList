@@ -9,5 +9,5 @@ public interface ProductRepository extends JpaRepository<ProductModel, Long> {
 
     List<ProductModel> findByName(String name);
 
-    List<ProductModel> findFirst10ByNameContainingOrDetailsContaining(String name, String details);
+    List<ProductModel> findFirst5ByNameContainingOrDetailsContaining(String name, String details);
 }

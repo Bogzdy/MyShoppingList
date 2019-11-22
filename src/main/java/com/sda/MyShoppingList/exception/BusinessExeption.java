@@ -4,7 +4,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 
 import java.sql.SQLIntegrityConstraintViolationException;
 
-public class BusinessExeption extends Throwable {
+public class BusinessExeption extends Exception {
     public BusinessExeption(Exception e) {
 
         if (e instanceof DataIntegrityViolationException){
@@ -13,6 +13,10 @@ public class BusinessExeption extends Throwable {
         }else {
             e.printStackTrace();
         }
+    }
+
+    public BusinessExeption(Errors error) {
+        super(error.getMessage());
     }
 
     public BusinessExeption(String message) {

@@ -26,11 +26,11 @@ public class ProductController extends AbstractController<Long, ProductModel, Pr
 
     @PostMapping(path = "/{categoryId}/product", consumes = "application/json", produces = "application/json")
     public ResponseEntity<ProductModel> addProduct(@RequestBody ProductModel productModel, @PathVariable Long categoryId) {
-       try {
-           return ResponseEntity.ok(service.add(productModel, categoryId));
-       } catch (BusinessExeption e){
-           return ResponseEntity.badRequest().build();
-       }
+        try {
+            return ResponseEntity.ok(service.add(productModel, categoryId));
+        } catch (BusinessExeption e) {
+            return ResponseEntity.badRequest().build();
+        }
     }
 
 
@@ -39,14 +39,14 @@ public class ProductController extends AbstractController<Long, ProductModel, Pr
         try {
             ProductModel updatedProduct = service.updateProduct(productModel, categoryId);
             return ResponseEntity.ok(updatedProduct);
-        } catch (IllegalArgumentException | BusinessExeption e){
+        } catch (IllegalArgumentException | BusinessExeption e) {
             e.printStackTrace();
             return ResponseEntity.badRequest().build();
         }
     }
 
     @GetMapping(path = "/firstFive/{keyWord}", produces = "application/json")
-    public ResponseEntity<List<ProductModel>> getFirstFiveByNameOrDetails(@PathVariable String keyWord){
+    public ResponseEntity<List<ProductModel>> getFirstFiveByNameOrDetails(@PathVariable String keyWord) {
         List<ProductModel> foundProducts = service.findFirstFiveByNameOrDetails(keyWord);
         System.out.println(keyWord);
         System.out.println(foundProducts.size());

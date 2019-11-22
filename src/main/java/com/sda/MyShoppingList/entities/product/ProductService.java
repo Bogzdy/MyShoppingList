@@ -54,7 +54,7 @@ public class ProductService extends AbstractService<Long, ProductModel, ProductR
         }
     }
 
-    public List<ProductModel> findFirstFiveByNameOrDetails(String keyWord){
-        return repository.findFirst10ByNameContainingOrDetailsContaining(keyWord, keyWord);
+    public List<ProductModel> findFirstFiveByNameOrDetails(String keyWord) {
+        return repository.findFirst5ByNameContainingOrDetailsContaining(keyWord, keyWord);
     }
 }
