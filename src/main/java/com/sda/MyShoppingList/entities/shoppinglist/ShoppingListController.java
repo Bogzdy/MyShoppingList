@@ -26,10 +26,11 @@ public class ShoppingListController extends AbstractController<Long, ShoppingLis
         }
     }
 
+    //Ex: /api/shoppingList/4?productIds=3&productIds=4 (4 = shoppingListId; 3, 4 = product id)
     @PutMapping(path = "/{shoppingListId}")
     public ResponseEntity<ShoppingListModel> updateShoppingList(
             @PathVariable Long shoppingListId,
-            @RequestParam(value = "array[]") Long... productId) {
+            @RequestParam(value = "productIds") Long... productId) {
         try{
             ShoppingListModel shoppingListModel = service.updateShoppingList(shoppingListId, productId);
             return ResponseEntity.ok(shoppingListModel);

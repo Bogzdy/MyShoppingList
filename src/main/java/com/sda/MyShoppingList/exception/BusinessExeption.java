@@ -23,4 +23,6 @@ public class BusinessExeption extends Exception {
         super(message);
         System.out.println(message);
     }
+
+
 }

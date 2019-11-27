@@ -3,6 +3,7 @@ package com.sda.MyShoppingList.entities.shoppinglist;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.sda.MyShoppingList.abstractclasses.AbstractModel;
 import com.sda.MyShoppingList.entities.product.ProductModel;
+import com.sda.MyShoppingList.entities.user.UserModel;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -15,6 +16,8 @@ import java.util.stream.Stream;
 @Getter
 @Entity
 public class ShoppingListModel extends AbstractModel<Long> {
+    @Column(nullable = false, unique = false)
+    private String name;
 
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(
@@ -23,5 +26,9 @@ public class ShoppingListModel extends AbstractModel<Long> {
             inverseJoinColumns = @JoinColumn(name = "productmodel_id", referencedColumnName = "id")
     )
     private Set<ProductModel> products;
+
+    @OneToOne(mappedBy = "shoppingListModel")
+    @JsonIgnore
+    private UserModel userModel;
 
 }
