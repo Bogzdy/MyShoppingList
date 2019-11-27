@@ -10,7 +10,8 @@ public enum Errors {
     SHOPPING_LIST_ALREADY_THERE("E004", "Shopping list already found!"),
     USER_NOT_FOUND("E005", "User not found!"),
     SHOPPING_LIST_NAME_MISSING("E006", "Shopping list name is missing!"),
-    ACCESS_DENIED("E007", "Access denied");
+    ACCESS_DENIED("E007", "Access denied"),
+    ORDER_NOT_FOUND("E008", "Order has not been found!");
 
     String code;
     String message;

@@ -7,4 +7,5 @@ import org.springframework.security.core.Authentication;
 public interface IAuthenticationFacade  {
     Authentication getAuthentication();
     UserModel hasAuthority(Long userId) throws BusinessExeption;
+
 }

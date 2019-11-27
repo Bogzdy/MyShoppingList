@@ -3,12 +3,14 @@ package com.sda.MyShoppingList.entities.product;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.sda.MyShoppingList.abstractclasses.AbstractModel;
 import com.sda.MyShoppingList.entities.category.CategoryModel;
+import com.sda.MyShoppingList.entities.command.Order;
 import com.sda.MyShoppingList.entities.shoppinglist.ShoppingListModel;
 import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Getter
@@ -34,8 +36,13 @@ public class ProductModel extends AbstractModel<Long> {
     @JsonIgnore
     private CategoryModel category;
 
-    @ManyToMany(mappedBy = "products")
+//    @ManyToMany(mappedBy = "products")
+//    @JsonIgnore
+//    private Set<ShoppingListModel> shoppingLists = new HashSet<>();
+
+    @OneToMany(mappedBy = "productModel", cascade = CascadeType.ALL)
     @JsonIgnore
-    private Set<ShoppingListModel> shoppingLists = new HashSet<>();
+    @Transient
+    private List<Order> orders;
 
 }

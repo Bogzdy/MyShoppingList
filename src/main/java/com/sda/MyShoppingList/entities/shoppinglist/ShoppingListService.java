@@ -1,6 +1,8 @@
 package com.sda.MyShoppingList.entities.shoppinglist;
 
 import com.sda.MyShoppingList.abstractclasses.AbstractService;
+import com.sda.MyShoppingList.entities.command.Order;
+import com.sda.MyShoppingList.entities.command.OrderRepository;
 import com.sda.MyShoppingList.entities.product.ProductModel;
 import com.sda.MyShoppingList.entities.product.ProductRepository;
 import com.sda.MyShoppingList.exception.BusinessExeption;
@@ -20,50 +22,17 @@ import java.util.stream.Stream;
 
 @Service
 public class ShoppingListService extends AbstractService<Long, ShoppingListModel, ShoppingListRepository> {
-    private ProductRepository productRepository;
 
     @Autowired
-    public ShoppingListService(ShoppingListRepository repository, ProductRepository productRepository) {
+    public ShoppingListService(ShoppingListRepository repository) {
         super(repository);
-        this.productRepository = productRepository;
-    }
-
-    public ProductModel addProductToShoppingList(@NotNull Long productModelId, @NotNull Long shoppingListId) throws BusinessExeption {
-
-        Optional<ProductModel> foundProductModel = productRepository.findById(productModelId);
-        Optional<ShoppingListModel> foundShoppingList = repository.findById(shoppingListId);
-
-        if (foundProductModel.isPresent() && foundShoppingList.isPresent()) {
-            foundShoppingList.get().getProducts().add(foundProductModel.get());
-            foundProductModel.get().getShoppingLists().add(foundShoppingList.get());
-
-            return productRepository.saveAndFlush(foundProductModel.get());
-        } else {
-            throw new BusinessExeption(Errors.SHOPPING_LIST_NOT_FOUND);
-        }
-    }
-
-    public ShoppingListModel updateShoppingList(@NotNull Long shoppingListId, @NotNull Long... productId) throws BusinessExeption {
-        Optional<ShoppingListModel> foundShoppingList = repository.findById(shoppingListId);
-        if (foundShoppingList.isPresent()) {
-            ArrayList<Long> productIds = new ArrayList<>(Arrays.asList(productId));
-            if (productIds.size() != 0){
-                for (Long id : productId) {
-                    Optional<ProductModel> foundProduct = productRepository.findById(id);
-                    foundProduct.ifPresent(productModel -> foundShoppingList.get().getProducts().remove(productModel));
-                }
-            }
-            return repository.saveAndFlush(foundShoppingList.get());
-        } else {
-            throw new BusinessExeption(Errors.PRODUCT_NOT_FOUND);
-        }
     }
 
     @Override
     public void delete(Long id) throws EmptyResultDataAccessException {
         Optional<ShoppingListModel> shoppingListToDelete = repository.findById(id);
         if (shoppingListToDelete.isPresent()) {
-            shoppingListToDelete.get().getProducts().clear();
+            shoppingListToDelete.get().getOrders().clear();
         }
         super.delete(id);
     }

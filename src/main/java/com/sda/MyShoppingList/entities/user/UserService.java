@@ -1,6 +1,8 @@
 package com.sda.MyShoppingList.entities.user;
 
 import com.sda.MyShoppingList.abstractclasses.AbstractService;
+import com.sda.MyShoppingList.entities.command.Order;
+import com.sda.MyShoppingList.entities.command.OrderRepository;
 import com.sda.MyShoppingList.entities.product.ProductModel;
 import com.sda.MyShoppingList.entities.product.ProductRepository;
 import com.sda.MyShoppingList.entities.shoppinglist.ShoppingListModel;
@@ -8,14 +10,10 @@ import com.sda.MyShoppingList.entities.shoppinglist.ShoppingListRepository;
 import com.sda.MyShoppingList.exception.BusinessExeption;
 import com.sda.MyShoppingList.exception.Errors;
 import com.sda.MyShoppingList.security.IAuthenticationFacade;
-import com.sda.MyShoppingList.security.MyUserDetails;
-import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Null;
 import java.util.Optional;
 
 @Service
@@ -23,15 +21,21 @@ public class UserService extends AbstractService<Long, UserModel, UserRepository
 
     private ShoppingListRepository shoppingListRepository;
     private ProductRepository productRepository;
+    private OrderRepository orderRepository;
 
     @Autowired
     private IAuthenticationFacade authenticationFacade;
 
     @Autowired
-    public UserService(UserRepository repository, ShoppingListRepository shoppingListRepository, ProductRepository productRepository) {
+    public UserService(
+            UserRepository repository,
+            ShoppingListRepository shoppingListRepository,
+            ProductRepository productRepository,
+            OrderRepository orderRepository) {
         super(repository);
         this.shoppingListRepository = shoppingListRepository;
         this.productRepository = productRepository;
+        this.orderRepository = orderRepository;
 }
 
     //Create or update user's shopping list
@@ -60,7 +64,7 @@ public class UserService extends AbstractService<Long, UserModel, UserRepository
     }
 
     //Add a product for a specific user
-    public ProductModel addProductToShoppingList(@NotNull Long productId, @NotNull Long userId) throws BusinessExeption {
+    public Order addOrderToShoppingList(@NotNull Long productId, @NotNull Long userId) throws BusinessExeption {
 
         try{
             UserModel authorizedUser = authenticationFacade.hasAuthority(userId);
@@ -71,34 +75,49 @@ public class UserService extends AbstractService<Long, UserModel, UserRepository
             Optional<ProductModel> existingProductModel = productRepository.findById(productId);
             existingProductModel.orElseThrow(() -> new BusinessExeption(Errors.PRODUCT_NOT_FOUND));
 
-            //add product to the user shopping list
-            authorizedUser.getShoppingListModel().getProducts().add(existingProductModel.get());
-            //add the shoppingList_id to the product
-            existingProductModel.get().getShoppingLists().add(authorizedUser.getShoppingListModel());
+            //Convert Product to an Order
+            Order myOrder = mapOrderFromProduct(existingProductModel.get());
 
-            return productRepository.saveAndFlush(existingProductModel.get());
+            //add order to the user shopping list
+            authorizedUser.getShoppingListModel().getOrders().add(myOrder);
+            //add the shoppingList_id to the product
+            myOrder.getShoppingLists().add(authorizedUser.getShoppingListModel());
+
+            return orderRepository.saveAndFlush(myOrder);
         } catch (BusinessExeption e){
             throw new BusinessExeption(e);
         }
     }
 
     //Delete a product from shoppinglist
-    public void deleteProductFromShoppingList(@NotNull Long productId, @NotNull Long userId) throws BusinessExeption {
+    public void deleteOrderFromShoppingList(@NotNull Long orderId, @NotNull Long userId) throws BusinessExeption {
         try {
             UserModel authorizedUser = authenticationFacade.hasAuthority(userId);
             //find shopping list
             Long shoppingListId = authorizedUser.getShoppingListModel().getId();
             Optional<ShoppingListModel> shoppingListModelToEdit = shoppingListRepository.findById(shoppingListId);
             shoppingListModelToEdit.orElseThrow(() -> new BusinessExeption(Errors.SHOPPING_LIST_NOT_FOUND));
-            //find product
-            Optional<ProductModel> productModelToDelete = productRepository.findById(productId);
-            productModelToDelete.orElseThrow(() -> new BusinessExeption(Errors.PRODUCT_NOT_FOUND));
-            //delete product from shopping list
-            shoppingListModelToEdit.get().getProducts().remove(productModelToDelete.get());
+            //find order
+            Optional<Order> foundOrder = authorizedUser
+                    .getShoppingListModel()
+                    .getOrders().stream()
+                    .filter(order -> order.getId().equals(orderId))
+                    .findFirst();
+            foundOrder.orElseThrow(() -> new BusinessExeption(Errors.ORDER_NOT_FOUND));
+            System.out.println(foundOrder.get());
+            //delete order from shopping list
+            shoppingListModelToEdit.get().getOrders().remove(foundOrder.get());
             shoppingListRepository.saveAndFlush(shoppingListModelToEdit.get());
         } catch (BusinessExeption e){
             throw new BusinessExeption(e);
         }
+    }
+
+    private Order mapOrderFromProduct(ProductModel productModel) {
+        Order newOrder = new Order();
+        newOrder.setName(productModel.getName());
+        newOrder.setMeasurementUnits(productModel.getMeasurementUnits());
+        return newOrder;
     }
 
 }

@@ -7,6 +7,7 @@ import com.sda.MyShoppingList.exception.BusinessExeption;
 import com.sda.MyShoppingList.utils.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

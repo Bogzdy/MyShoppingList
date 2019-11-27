@@ -1,18 +1,16 @@
 package com.sda.MyShoppingList.entities.user;
 
 import com.sda.MyShoppingList.abstractclasses.AbstractController;
+import com.sda.MyShoppingList.entities.command.Order;
 import com.sda.MyShoppingList.entities.product.ProductModel;
 import com.sda.MyShoppingList.entities.shoppinglist.ShoppingListModel;
 import com.sda.MyShoppingList.exception.BusinessExeption;
-import com.sda.MyShoppingList.security.AuthenticationFacade;
 import com.sda.MyShoppingList.security.IAuthenticationFacade;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -40,22 +38,22 @@ public class UserController extends AbstractController<Long, UserModel, UserRepo
     }
 
     @PostMapping(path = "/{userId}/{productModelId}", produces = "application/json", consumes = "application/json")
-    public ResponseEntity<ProductModel> addProductToShoppingList(
+    public ResponseEntity<Order> addOrderToShoppingList(
             @PathVariable(name = "productModelId") Long productModelId,
             @PathVariable(name = "userId") Long userId) {
         try {
-            ProductModel addedProduct = service.addProductToShoppingList(productModelId, userId);
-            return ResponseEntity.ok(addedProduct);
+            Order order = service.addOrderToShoppingList(productModelId, userId);
+            return ResponseEntity.ok(order);
         } catch (BusinessExeption e) {
             e.printStackTrace();
             return ResponseEntity.notFound().build();
         }
     }
 
-    @PutMapping(path = "/{userId}/{productId}")
-    public ResponseEntity deleteProductFromShoppingList(@PathVariable Long productId, @PathVariable Long userId) {
+    @PutMapping(path = "/{userId}/{orderId}")
+    public ResponseEntity deleteOrderFromShoppingList(@PathVariable Long orderId, @PathVariable Long userId) {
         try {
-            service.deleteProductFromShoppingList(productId, userId);
+            service.deleteOrderFromShoppingList(orderId, userId);
             return ResponseEntity.noContent().build();
         } catch (BusinessExeption e) {
             e.printStackTrace();

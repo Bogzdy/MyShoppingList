@@ -7,6 +7,8 @@ import com.sda.MyShoppingList.exception.Errors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
@@ -25,7 +27,8 @@ public class AuthenticationFacade implements IAuthenticationFacade {
     public Authentication getAuthentication() {
         return SecurityContextHolder.getContext().getAuthentication();
     }
-    //Check if the authenticated user is the one who make the calls
+
+    //Check if the authenticated user is the one who make the calls or has ADMIN authority
     public UserModel hasAuthority(Long userId) throws BusinessExeption {
         Authentication authentication = getAuthentication();
         MyUserDetails myUserDetails = (MyUserDetails) authentication.getPrincipal();
@@ -33,8 +36,12 @@ public class AuthenticationFacade implements IAuthenticationFacade {
         Optional<UserModel> foundUser = userRepository.findById(userId);
         foundUser.orElseThrow(() -> new BusinessExeption(Errors.USER_NOT_FOUND));
         //check if the foundUser is the same with principal
-        if (!myUserDetails.getName().equals(foundUser.get().getName())) throw new BusinessExeption(Errors.ACCESS_DENIED);
-
-        return foundUser.get();
+        boolean bool = myUserDetails.getAuthorities().contains(new SimpleGrantedAuthority("ADMIN"));
+        System.out.println("BOOOL" + bool);
+        if (myUserDetails.getName().equals(foundUser.get().getName())
+                || bool) {
+            return foundUser.get();
+        }
+        throw new BusinessExeption(Errors.ACCESS_DENIED);
     }
 }
