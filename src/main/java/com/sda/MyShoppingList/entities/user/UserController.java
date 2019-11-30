@@ -1,8 +1,7 @@
 package com.sda.MyShoppingList.entities.user;
 
 import com.sda.MyShoppingList.abstractclasses.AbstractController;
-import com.sda.MyShoppingList.entities.command.Order;
-import com.sda.MyShoppingList.entities.product.ProductModel;
+import com.sda.MyShoppingList.entities.order.Order;
 import com.sda.MyShoppingList.entities.shoppinglist.ShoppingListModel;
 import com.sda.MyShoppingList.exception.BusinessExeption;
 import com.sda.MyShoppingList.security.IAuthenticationFacade;
@@ -16,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
+@CrossOrigin(origins = {"http://localhost:3000/", "http://localhost:8080/"})
 @RequestMapping("api/users")
 public class UserController extends AbstractController<Long, UserModel, UserRepository, UserService> {
     @Autowired

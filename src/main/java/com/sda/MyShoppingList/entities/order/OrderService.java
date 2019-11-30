@@ -1,4 +1,4 @@
-package com.sda.MyShoppingList.entities.command;
+package com.sda.MyShoppingList.entities.order;
 
 import com.sda.MyShoppingList.abstractclasses.AbstractService;
 import org.springframework.stereotype.Service;

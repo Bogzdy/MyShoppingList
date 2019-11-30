@@ -3,15 +3,12 @@ package com.sda.MyShoppingList.entities.product;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.sda.MyShoppingList.abstractclasses.AbstractModel;
 import com.sda.MyShoppingList.entities.category.CategoryModel;
-import com.sda.MyShoppingList.entities.command.Order;
-import com.sda.MyShoppingList.entities.shoppinglist.ShoppingListModel;
+import com.sda.MyShoppingList.entities.order.Order;
 import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 @Getter
 @Setter

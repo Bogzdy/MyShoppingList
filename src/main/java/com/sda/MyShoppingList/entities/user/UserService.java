@@ -1,8 +1,8 @@
 package com.sda.MyShoppingList.entities.user;
 
 import com.sda.MyShoppingList.abstractclasses.AbstractService;
-import com.sda.MyShoppingList.entities.command.Order;
-import com.sda.MyShoppingList.entities.command.OrderRepository;
+import com.sda.MyShoppingList.entities.order.Order;
+import com.sda.MyShoppingList.entities.order.OrderRepository;
 import com.sda.MyShoppingList.entities.product.ProductModel;
 import com.sda.MyShoppingList.entities.product.ProductRepository;
 import com.sda.MyShoppingList.entities.shoppinglist.ShoppingListModel;

@@ -36,10 +36,9 @@ public class AuthenticationFacade implements IAuthenticationFacade {
         Optional<UserModel> foundUser = userRepository.findById(userId);
         foundUser.orElseThrow(() -> new BusinessExeption(Errors.USER_NOT_FOUND));
         //check if the foundUser is the same with principal
-        boolean bool = myUserDetails.getAuthorities().contains(new SimpleGrantedAuthority("ADMIN"));
-        System.out.println("BOOOL" + bool);
-        if (myUserDetails.getName().equals(foundUser.get().getName())
-                || bool) {
+        boolean hasAuthority = myUserDetails.getName().equals(foundUser.get().getName());
+        boolean isAdmin = myUserDetails.getAuthorities().contains(new SimpleGrantedAuthority("ADMIN"));
+        if (hasAuthority || isAdmin) {
             return foundUser.get();
         }
         throw new BusinessExeption(Errors.ACCESS_DENIED);

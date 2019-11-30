@@ -1,4 +1,4 @@
-package com.sda.MyShoppingList.entities.command;
+package com.sda.MyShoppingList.entities.order;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnore;

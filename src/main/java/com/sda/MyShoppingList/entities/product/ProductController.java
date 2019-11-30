@@ -17,6 +17,7 @@ import java.util.Optional;
 
 @RequestMapping("/api/product")
 @RestController
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 @PreAuthorize("hasAuthority('ADMIN')")
 public class ProductController extends AbstractController<Long, ProductModel, ProductRepository, ProductService> {
 

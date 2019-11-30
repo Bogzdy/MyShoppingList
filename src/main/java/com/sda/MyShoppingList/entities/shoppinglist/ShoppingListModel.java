@@ -2,7 +2,7 @@ package com.sda.MyShoppingList.entities.shoppinglist;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.sda.MyShoppingList.abstractclasses.AbstractModel;
-import com.sda.MyShoppingList.entities.command.Order;
+import com.sda.MyShoppingList.entities.order.Order;
 import com.sda.MyShoppingList.entities.user.UserModel;
 import lombok.Getter;
 import lombok.Setter;
